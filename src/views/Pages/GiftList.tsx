@@ -90,7 +90,7 @@ const GiftList: React.FC = () => {
     const amount = inputAmount;
     try {
       const response = await axios.post(
-        'http://localhost:5000/api/create_pix_payment',
+        'http://backend:5000/api/create_pix_payment',
         { amount }
       );
       const qrCode = response.data.point_of_interaction.transaction_data.qr_code_base64;
