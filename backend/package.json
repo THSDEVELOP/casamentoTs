@@ -1,0 +1,17 @@
+{
+    "name": "backend",
+    "version": "1.0.0",
+    "main": "server.js",
+    "license": "MIT",
+    "dependencies": {
+      "axios": "^0.21.1",
+      "cors": "^2.8.5",
+      "dotenv": "^8.2.0",
+      "ws": "^7.4.6",
+      "express": "^4.19.2"
+    },
+    "scripts": {
+      "start": "node server.js"
+    }
+  }
+  

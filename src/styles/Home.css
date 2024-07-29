@@ -1,0 +1,6 @@
+.home {
+    background-image: url('../assets/foto-site-casamento.jpg');
+    background-size: cover;
+    background-position: center;
+    height: 100vh;
+}

@@ -1,26 +1,28 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Home from './views/Pages/Home';
+import GiftList from './views/Pages/GiftList';
+import GuestRegistration from './views/Pages/GuestRegistration';
+import Felicidades from './views/Pages/Felicidades';
+import { GuestProvider } from './context/GuestContext';
+import CustomBar from './shared/components/CustomBar';
+import Album1 from './views/Pages/Album1';
 
-function App() {
+const App: React.FC = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <GuestProvider>
+      <Router>
+          <CustomBar />
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/album" element={<Album1 />} />
+            <Route path="/giftlist" element={<GiftList />} />
+            <Route path="/guestregistration" element={<GuestRegistration />} />
+            <Route path="/felicidades" element={<Felicidades />} />
+          </Routes>
+      </Router>
+    </GuestProvider>
   );
-}
+};
 
 export default App;
