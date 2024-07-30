@@ -60,7 +60,7 @@ const GiftList: React.FC = () => {
   const targetAmount = 100000;
 
   useEffect(() => {
-    const ws = new ReconnectingWebSocket('ws://backend:5000'); // Atualize para 'ws://backend:5000'
+    const ws = new ReconnectingWebSocket('ws://backend:5000/'); // Atualize para 'ws://backend:5000'
   
     ws.onmessage = (event) => {
       const data = JSON.parse(event.data);

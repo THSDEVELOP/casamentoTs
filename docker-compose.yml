@@ -1,10 +1,7 @@
-version: '3'
-
 services:
   backend:
     build:
-      context: .
-      dockerfile: Dockerfile.backend
+      context: ./backend
     env_file:
       - backend/.env
     ports:
@@ -15,11 +12,8 @@ services:
       - frontend
     networks:
       - app-network
-
   frontend:
-    build:
-      context: .
-      dockerfile: Dockerfile.frontend
+    build: ./
     ports:
       - "3000:3000"
     volumes:
@@ -31,7 +25,6 @@ services:
       - CHOKIDAR_USEPOLLING=true
     networks:
       - app-network
-
 networks:
   app-network:
     driver: bridge

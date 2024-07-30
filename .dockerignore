@@ -1,0 +1,21 @@
+# Exclude node_modules directories
+node_modules
+backend/node_modules
+frontend/node_modules
+ 
+# Exclude build directories
+dist
+build
+ 
+# Exclude git directory and files
+.git
+.gitignore
+ 
+# Exclude system files
+.DS_Store
+ 
+# Exclude environment files
+*.env
+ 
+# Other files/directories to exclude
+*.log
