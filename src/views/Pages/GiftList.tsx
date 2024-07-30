@@ -60,13 +60,13 @@ const GiftList: React.FC = () => {
   const targetAmount = 100000;
 
   useEffect(() => {
-    const ws = new ReconnectingWebSocket('ws://localhost:5000');
-
+    const ws = new ReconnectingWebSocket('ws://backend:5000'); // Atualize para 'ws://backend:5000'
+  
     ws.onmessage = (event) => {
       const data = JSON.parse(event.data);
       setConfirmedAmount((prevAmount) => prevAmount + data.amount);
     };
-
+  
     return () => {
       ws.close();
     };
@@ -90,7 +90,7 @@ const GiftList: React.FC = () => {
     const amount = inputAmount;
     try {
       const response = await axios.post(
-        'http://backend:5000/api/create_pix_payment',
+        'http://backend:5000/api/create_pix_payment', // Atualize para 'http://backend:5000/api/create_pix_payment'
         { amount }
       );
       const qrCode = response.data.point_of_interaction.transaction_data.qr_code_base64;
