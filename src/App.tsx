@@ -4,7 +4,7 @@ import Home from './views/Pages/Home';
 import GiftList from './views/Pages/GiftList';
 import GuestRegistration from './views/Pages/GuestRegistration';
 import Felicidades from './views/Pages/Felicidades';
-import { GuestProvider } from './context/GuestContext';
+import { GuestProvider } from './context/GuestContext/GuestContext';
 import CustomBar from './shared/components/CustomBar';
 import Album1 from './views/Pages/Album1';
 

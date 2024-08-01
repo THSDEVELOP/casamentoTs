@@ -1,15 +1,11 @@
 import React, { useState, useContext } from 'react';
-import { GuestContext } from '../../context/GuestContext';
+import { GuestContext } from '../../context/GuestContext/GuestContext';
 import { Box, Button, Container, TextField, Typography, Snackbar } from '@mui/material';
 import { styled } from '@mui/system';
 import { useNavigate } from 'react-router-dom';
 import emailjs from '@emailjs/browser';
 import BackgroundContainer from '../../shared/components/BackgroundContainer';
-
-interface FamilyMember {
-    name: string;
-    age: number;
-}
+import { FamilyMember } from 'context-Family-Member';
 
 const serviceId = process.env.REACT_APP_EMAILJS_SERVICE_ID || '';
 const templateId = process.env.REACT_APP_EMAILJS_TEMPLATE_ID || '';
