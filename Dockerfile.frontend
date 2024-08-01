@@ -1,20 +1,17 @@
-# Dockerfile.frontend
+# Stage 1: Build React app
 FROM node:14 AS build
 
 # Set working directory
 WORKDIR /usr/src/app
 
-# Copy package.json and package-lock.json from root
+# Copy package.json and package-lock.json
 COPY package.json package-lock.json ./
 
-# Install dependencies with retries and network settings
+# Install dependencies
 RUN npm install --prefer-offline --no-audit --progress=false --no-fund
 
 # Copy all frontend files
-COPY src ./src
-COPY public ./public
-COPY tsconfig.json ./
-COPY tailwind.config.js ./
+COPY . .
 
 # Set environment variables
 ARG REACT_APP_EMAILJS_SERVICE_ID
@@ -41,6 +38,8 @@ RUN npm run build
 
 # Stage 2: Serve the app with Nginx
 FROM nginx:latest
+
+# Copy build output from the build stage to Nginx's html directory
 COPY --from=build /usr/src/app/build /usr/share/nginx/html
 
 # Remove default nginx website
