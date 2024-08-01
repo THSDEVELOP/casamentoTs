@@ -37,7 +37,7 @@ ENV REACT_APP_FIREBASE_APP_ID=$REACT_APP_FIREBASE_APP_ID
 RUN npm run build
 
 # Stage 2: Serve the app with Nginx
-FROM nginx:latest
+FROM nginx:latest AS nginx
 
 # Copy build output from the build stage to Nginx's html directory
 COPY --from=build /usr/src/app/build /usr/share/nginx/html

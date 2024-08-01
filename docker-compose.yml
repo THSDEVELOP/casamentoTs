@@ -34,7 +34,7 @@ services:
       - ./tailwind.config.js:/usr/src/app/tailwind.config.js
     networks:
       - app-network
-    # Não é necessário expor portas aqui, pois o NGINX irá servir os arquivos estáticos
+    # O frontend não precisa expor portas diretamente, pois o NGINX irá servir o frontend
 
   nginx:
     build:
