@@ -18,8 +18,15 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.frontend
-    env_file:
-      - .env
+      args:
+        - REACT_APP_EMAILJS_SERVICE_ID=${REACT_APP_EMAILJS_SERVICE_ID}
+        - REACT_APP_EMAILJS_TEMPLATE_ID=${REACT_APP_EMAILJS_TEMPLATE_ID}
+        - REACT_APP_EMAILJS_USER_ID=${REACT_APP_EMAILJS_USER_ID}
+    environment:
+      - REACT_APP_EMAILJS_SERVICE_ID=${REACT_APP_EMAILJS_SERVICE_ID}
+      - REACT_APP_EMAILJS_TEMPLATE_ID=${REACT_APP_EMAILJS_TEMPLATE_ID}
+      - REACT_APP_EMAILJS_USER_ID=${REACT_APP_EMAILJS_USER_ID}
+      - CHOKIDAR_USEPOLLING=true
     ports:
       - "3000:3000"
     volumes:
@@ -27,8 +34,6 @@ services:
       - ./public:/usr/src/app/public
       - ./tsconfig.json:/usr/src/app/tsconfig.json
       - ./tailwind.config.js:/usr/src/app/tailwind.config.js
-    environment:
-      - CHOKIDAR_USEPOLLING=true
     networks:
       - app-network
 
