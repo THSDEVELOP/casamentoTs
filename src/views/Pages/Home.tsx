@@ -1,35 +1,14 @@
 import React from 'react';
-import { Button, Container, Typography, Box } from '@mui/material';
+import { Button, Box, styled } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { styled } from '@mui/system';
 import Slider from 'react-slick';
 import "slick-carousel/slick/slick.css"; 
 import "slick-carousel/slick/slick-theme.css";
 import BackgroundContainer from '../../shared/components/BackgroundContainer';
+import { StyledText } from '../../styles/StyledTexts/StyledText'; // Importe o StyledText
+import { CustomContainerFelicidades, CustomContainerHome } from '../../styles/StyledContainer/CustomContainer';
 
-const StyledContainer = styled(Container)({
-  display: 'flex',
-  flexDirection: 'column',
-  justifyContent: 'center',
-  alignItems: 'center',
-  textAlign: 'center',
-  padding: '40px',
-  borderRadius: '10px',
-  minHeight: '100vh',
-  position: 'relative',
-});
-
-const StyledButton = styled(Button)({
-  backgroundColor: '#d4af37',
-  color: '#fff',
-  padding: '10px 20px',
-  margin: '10px',
-  opacity: 0.8,
-  '&:hover': {
-    backgroundColor: '#b8860b',
-    opacity: 1,
-  },
-});
+import CustomButtonHome from '../../styles/StyledButton/CustomButtonHome';
 
 const ImageCarousel: React.FC<{ images: string[], navigate: (path: string) => void }> = ({ images, navigate }) => {
   const settings = {
@@ -52,18 +31,18 @@ const ImageCarousel: React.FC<{ images: string[], navigate: (path: string) => vo
         ))}
       </Slider>
       <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', zIndex: 2 }}>
-        <StyledButton variant="contained" onClick={() => navigate('/guestregistration')}>
+        <CustomButtonHome variant="contained" onClick={() => navigate('/guestregistration')}>
           Cadastro
-        </StyledButton>
-        <StyledButton variant="contained" onClick={() => navigate('/felicidades')}>
+        </CustomButtonHome>
+        <CustomButtonHome variant="contained" onClick={() => navigate('/felicidades')}>
           Comentarios
-        </StyledButton>
-        <StyledButton variant="contained" onClick={() => navigate('/giftlist')}>
+        </CustomButtonHome>
+        <CustomButtonHome variant="contained" onClick={() => navigate('/giftlist')}>
           Lista de Presentes
-        </StyledButton>
-        <StyledButton variant="contained" onClick={() => navigate('/album')}>
+        </CustomButtonHome>
+        <CustomButtonHome variant="contained" onClick={() => navigate('/album')}>
           Álbum
-        </StyledButton>
+        </CustomButtonHome>
       </Box>
     </Box>
   );
@@ -79,7 +58,7 @@ const Home: React.FC = () => {
 
   return (
     <BackgroundContainer>
-      <StyledContainer>
+      <CustomContainerHome>
         <Box
           sx={{
             display: 'flex',
@@ -91,15 +70,15 @@ const Home: React.FC = () => {
             position: 'relative',
           }}
         >
-          <Typography variant="h2" gutterBottom align="center" sx={{ color: '#b8860b', fontFamily: 'serif', fontWeight: 'bold', zIndex: 1 }}>
+          <StyledText variant="h2" gutterBottom align="center">
             Bem-vindo ao Nosso Casamento
-          </Typography>
-          <Typography variant="h3" gutterBottom align="center" sx={{ color: '#b8860b', fontFamily: 'cursive', fontStyle: 'italic', zIndex: 1 }}>
+          </StyledText>
+          <StyledText variant="h3" gutterBottom align="center">
             Sara & Tharsys
-          </Typography>
+          </StyledText>
           <ImageCarousel images={images} navigate={navigate} />
         </Box>
-      </StyledContainer>
+      </CustomContainerHome>
     </BackgroundContainer>
   );
 };

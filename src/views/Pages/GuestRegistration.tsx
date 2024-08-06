@@ -1,62 +1,19 @@
 import React, { useState, useContext } from 'react';
 import { GuestContext } from '../../context/GuestContext/GuestContext';
-import { Box, Button, Container, TextField, Typography, Snackbar } from '@mui/material';
+import { Box, Snackbar } from '@mui/material';
 import { styled } from '@mui/system';
 import { useNavigate } from 'react-router-dom';
 import emailjs from '@emailjs/browser';
 import BackgroundContainer from '../../shared/components/BackgroundContainer';
+import { StyledText, CustomTextField } from '../../styles/StyledTexts/StyledText'; // Importe o StyledText
 import { FamilyMember } from 'context-Family-Member';
+import { CustomContainerRegister } from '../../styles/StyledContainer/CustomContainer';
+import CustomButtonHome from '../../styles/StyledButton/CustomButtonHome';
+import CustomForm from '../../styles/StyledForm/StyledForm';
 
 const serviceId = process.env.REACT_APP_EMAILJS_SERVICE_ID || '';
 const templateId = process.env.REACT_APP_EMAILJS_TEMPLATE_ID || '';
 const userId = process.env.REACT_APP_EMAILJS_USER_ID || '';
-
-const StyledContainer = styled(Container)({
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-    minHeight: '100vh',
-    borderRadius: '10px',
-    padding: '40px',
-    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-    textAlign: 'center',
-    marginTop: '64px', // Considera a altura da CustomBar
-});
-
-const StyledForm = styled('form')({
-    width: '100%',
-    maxWidth: '600px',
-    marginTop: '20px', // Espaçamento entre o título e o formulário
-});
-
-const StyledTextField = styled(TextField)({
-    marginBottom: '20px',
-    '& .MuiInputBase-root': {
-        backgroundColor: '#fff',
-    },
-    '& .MuiOutlinedInput-root': {
-        '& fieldset': {
-            borderColor: '#d4af37',
-        },
-        '&:hover fieldset': {
-            borderColor: '#b8860b',
-        },
-        '&.Mui-focused fieldset': {
-            borderColor: '#b8860b',
-        },
-    },
-});
-
-const StyledButton = styled(Button)({
-    backgroundColor: '#d4af37',
-    color: '#fff',
-    padding: '10px',
-    margin: '10px',
-    '&:hover': {
-        backgroundColor: '#b8860b',
-    },
-});
 
 const StyledSnackbar = styled(Snackbar)({
     '& .MuiSnackbarContent-root': {
@@ -113,7 +70,7 @@ const GuestRegistration: React.FC = () => {
             setSnackbarOpen(true);
             setTimeout(() => {
                 navigate('/felicidades');
-            }, 1500); // Espera 1.5 segundos antes de navegar
+            }, 1500);
         } catch (error) {
             console.error('Erro ao enviar o email:', error);
         }
@@ -125,12 +82,12 @@ const GuestRegistration: React.FC = () => {
 
     return (
         <BackgroundContainer>
-            <StyledContainer>
-                <Typography variant="h4" gutterBottom sx={{ color: '#b8860b', fontFamily: 'cursive', fontStyle: 'italic' }}>
+            <CustomContainerRegister>
+                <StyledText variant="h4" gutterBottom>
                     Cadastro de Convidados
-                </Typography>
-                <StyledForm onSubmit={handleSubmit}>
-                    <StyledTextField
+                </StyledText>
+                <CustomForm onSubmit={handleSubmit}>
+                    <CustomTextField
                         label="Nome da Família"
                         variant="outlined"
                         fullWidth
@@ -139,46 +96,37 @@ const GuestRegistration: React.FC = () => {
                     />
                     {localMembers.map((member, index) => (
                         <Box key={index} display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-                            <StyledTextField
+                            <CustomTextField
                                 label="Nome"
                                 variant="outlined"
                                 name="name"
                                 value={member.name}
                                 onChange={(e) => handleInputChange(index, e)}
-                                sx={{ flex: 3, mr: 2 }} // Aumentar a largura do campo Nome
+                                sx={{ flex: 3, mr: 2 }}
                             />
-                            <StyledTextField
-                                label="Idade"
-                                variant="outlined"
-                                name="age"
-                                type="number"
-                                value={member.age.toString()}
-                                onChange={(e) => handleInputChange(index, e)}
-                                sx={{ flex: 1, mr: 2 }} // Diminuir a largura do campo Idade
-                            />
-                            <StyledButton
+                            <CustomButtonHome
                                 variant="contained"
                                 color="secondary"
                                 onClick={() => removeMember(index)}
                             >
                                 Remover
-                            </StyledButton>
+                            </CustomButtonHome>
                         </Box>
                     ))}
-                    <StyledButton type="button" onClick={addMember}>
+                    <CustomButtonHome type="button" onClick={addMember}>
                         Adicionar Membro
-                    </StyledButton>
-                    <StyledButton type="submit">
+                    </CustomButtonHome>
+                    <CustomButtonHome type="submit">
                         Enviar
-                    </StyledButton>
-                </StyledForm>
+                    </CustomButtonHome>
+                </CustomForm>
                 <StyledSnackbar
                     open={snackbarOpen}
                     autoHideDuration={6000}
                     onClose={handleSnackbarClose}
                     message="Obrigado por confirmar sua presença em nosso casamento"
                 />
-            </StyledContainer>
+            </CustomContainerRegister>
         </BackgroundContainer>
     );
 };

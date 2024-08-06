@@ -1,52 +1,20 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { GuestContext } from '../../context/GuestContext/GuestContext';
-import { Container, Typography, List, ListItem, TextField, Button, Snackbar, Box } from '@mui/material';
+import { Container, List, ListItem, TextField, Button, Snackbar, Box } from '@mui/material';
 import { styled } from '@mui/system';
 import BackgroundContainer from '../../shared/components/BackgroundContainer';
 import { db } from './firebase';
-import firebase from 'firebase/compat/app'; // Adicione esta linha para importar firebase
+import firebase from 'firebase/compat/app';
 import 'firebase/compat/firestore';
+import { StyledText, CustomTextField } from '../../styles/StyledTexts/StyledText';
+import {CustomContainerFelicidades} from '../../styles/StyledContainer/CustomContainer';
+import CustomButtonHome from '../../styles/StyledButton/CustomButtonHome';
 
 interface Wish {
   family: string;
   representative: string;
   wish: string;
 }
-
-const StyledContainer = styled(Container)({
-  padding: '40px',
-  borderRadius: '10px',
-  boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-  textAlign: 'center',
-});
-
-const StyledTextField = styled(TextField)({
-  marginBottom: '20px',
-  '& .MuiInputBase-root': {
-    backgroundColor: '#fff',
-  },
-  '& .MuiOutlinedInput-root': {
-    '& fieldset': {
-      borderColor: '#d4af37',
-    },
-    '&:hover fieldset': {
-      borderColor: '#b8860b',
-    },
-    '&.Mui-focused fieldset': {
-      borderColor: '#b8860b',
-    },
-  },
-});
-
-const StyledButton = styled(Button)({
-  backgroundColor: '#d4af37',
-  color: '#fff',
-  padding: '10px 20px',
-  margin: '10px',
-  '&:hover': {
-    backgroundColor: '#b8860b',
-  },
-});
 
 const StyledSnackbar = styled(Snackbar)({
   '& .MuiSnackbarContent-root': {
@@ -71,7 +39,7 @@ const Felicidades: React.FC = () => {
       });
   
     return () => unsubscribe();
-  }, []); // Dependência vazia para rodar apenas uma vez ao montar
+  }, []);
 
   const handleWishesChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setWishes(event.target.value);
@@ -106,13 +74,13 @@ const Felicidades: React.FC = () => {
   return (
     <BackgroundContainer>
       <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh">
-        <StyledContainer>
-          <Typography variant="h4" gutterBottom sx={{ color: '#b8860b', fontFamily: 'cursive', fontStyle: 'italic' }}>
+        <CustomContainerFelicidades>
+          <StyledText variant="h4" gutterBottom>
             Família {familyName}
-          </Typography>
-          <Typography variant="body1" gutterBottom sx={{ color: '#b8860b', fontFamily: 'cursive', fontStyle: 'italic' }}>
+          </StyledText>
+          <StyledText variant="body1" gutterBottom>
             Estamos felizes em convidar-los:
-          </Typography>
+          </StyledText>
           <List>
             {members.map((member, index) => (
               <ListItem key={index}>
@@ -120,20 +88,20 @@ const Felicidades: React.FC = () => {
               </ListItem>
             ))}
           </List>
-          <Typography variant="body1" gutterBottom sx={{ color: '#b8860b', fontFamily: 'cursive', fontStyle: 'italic' }}>
+          <StyledText variant="body1" gutterBottom>
             Nome do Representante da Família:
-          </Typography>
-          <StyledTextField
+          </StyledText>
+          <CustomTextField
             label="Nome do Representante"
             variant="outlined"
             fullWidth
             value={representativeName}
             onChange={handleRepresentativeNameChange}
           />
-          <Typography variant="body1" gutterBottom sx={{ color: '#b8860b', fontFamily: 'cursive', fontStyle: 'italic' }}>
+          <StyledText variant="body1" gutterBottom>
             Deixe suas felicitações aos noivos:
-          </Typography>
-          <StyledTextField
+          </StyledText>
+          <CustomTextField
             label="Felicitações"
             variant="outlined"
             fullWidth
@@ -142,9 +110,9 @@ const Felicidades: React.FC = () => {
             value={wishes}
             onChange={handleWishesChange}
           />
-          <StyledButton onClick={handleSubmit}>
+          <CustomButtonHome onClick={handleSubmit}>
             Enviar Felicitações
-          </StyledButton>
+          </CustomButtonHome>
           <StyledSnackbar
             open={snackbarOpen}
             autoHideDuration={6000}
@@ -152,9 +120,9 @@ const Felicidades: React.FC = () => {
             message="Obrigado pelas felicitações!"
           />
           <Box mt={4}>
-            <Typography variant="h5" gutterBottom sx={{ color: '#b8860b', fontFamily: 'cursive', fontStyle: 'italic' }}>
+            <StyledText variant="h5" gutterBottom>
               Felicitações das Famílias Convidadas
-            </Typography>
+            </StyledText>
             <List>
               {wishesList.map((entry, index) => (
                 <ListItem key={index}>
@@ -163,7 +131,7 @@ const Felicidades: React.FC = () => {
               ))}
             </List>
           </Box>
-        </StyledContainer>
+        </CustomContainerFelicidades>
       </Box>
     </BackgroundContainer>
   );
