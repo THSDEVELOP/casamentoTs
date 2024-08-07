@@ -7,7 +7,7 @@ const StyledImageContainer = styled(Box)({
   justifyContent: 'center',
   alignItems: 'center',
   width: '100%',
-  maxHeight: '500px',
+  maxHeight: '400px',
   overflow: 'hidden',
 });
 
