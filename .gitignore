@@ -24,3 +24,7 @@ yarn-error.log*
 
 # env
 **.env
+
+# data
+albums.json
+presentes.json

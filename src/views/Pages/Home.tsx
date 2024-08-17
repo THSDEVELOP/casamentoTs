@@ -1,12 +1,12 @@
 import React from 'react';
-import { Button, Box, styled } from '@mui/material';
+import { Box } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import Slider from 'react-slick';
 import "slick-carousel/slick/slick.css"; 
 import "slick-carousel/slick/slick-theme.css";
 import BackgroundContainer from '../../shared/components/BackgroundContainer';
 import { StyledText } from '../../styles/StyledTexts/StyledText'; // Importe o StyledText
-import { CustomContainerFelicidades, CustomContainerHome } from '../../styles/StyledContainer/CustomContainer';
+import { CustomContainerHome } from '../../styles/StyledContainer/CustomContainer';
 
 import CustomButtonHome from '../../styles/StyledButton/CustomButtonHome';
 

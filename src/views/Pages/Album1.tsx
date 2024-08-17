@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { Box, Grid, Button, TextField } from '@mui/material';
+import React, { useState } from 'react';
+import { Box, Grid, Button, TextField, InputAdornment } from '@mui/material';
 import { styled } from '@mui/system';
+import SearchIcon from '@mui/icons-material/Search';
 import BackgroundContainer from '../../shared/components/BackgroundContainer';
 import Slider from 'react-slick';
 import "slick-carousel/slick/slick.css";
@@ -8,60 +9,72 @@ import "slick-carousel/slick/slick-theme.css";
 import { StyledText } from '../../styles/StyledTexts/StyledText';
 import { CustomContainerAlbum } from '../../styles/StyledContainer/CustomContainer';
 import { AlbumCard } from '../../styles/StyledImagesAlbum/StyledAlbum';
+import albumsData from '../../data/albums.json';
+import CustomButtonHome from '../../styles/StyledButton/CustomButtonHome';
 
-// Estilo do campo de busca
-const SearchField = styled(TextField)({
+const hoverShadow = '0 4px 8px rgba(0, 0, 0, 0.3)'; // Sombra suave no hover
+
+const SearchField = styled(TextField)(({ theme }) => ({
   marginBottom: '20px',
   width: '100%',
   maxWidth: '400px',
-});
+  '& .MuiOutlinedInput-root': {
+    borderRadius: '25px',
+    backgroundColor: '#fff',
+    border: '1px solid #ddd',
+    paddingRight: 0,
+    transition: 'box-shadow 0.3s, border 0.3s',
+    '&:hover': {
+      boxShadow: hoverShadow,
+      border: '1px solid rgba(0, 0, 0, 0.2)',
+    },
+    '&.Mui-focused': {
+      boxShadow: hoverShadow,
+      border: '1px solid rgba(0, 0, 0, 0.5)',
+    },
+  },
+  '& .MuiOutlinedInput-input': {
+    paddingLeft: '12px',
+  },
+  '& .MuiInputAdornment-root': {
+    marginRight: 0,
+  },
+}));
 
-// Estilo para o contêiner das imagens
 const StyledImageContainer = styled(Box)(({ theme }) => ({
   position: 'relative',
   overflow: 'hidden',
   borderRadius: '10px',
-  boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
   transition: 'transform 0.3s, box-shadow 0.3s',
   '&:hover': {
     transform: 'scale(1.05)',
-    boxShadow: '0 8px 16px rgba(0, 0, 0, 0.4)',
+    boxShadow: hoverShadow,
   },
 }));
 
-// Estilo para as imagens
 const StyledImage = styled('img')({
   width: '100%',
   height: 'auto',
-  borderRadius: '10px',
   objectFit: 'cover',
-  transition: 'opacity 0.3s',
+  borderRadius: '10px',
+  transition: 'opacity 0.3s, box-shadow 0.3s',
   '&:hover': {
     opacity: 0.9,
+    boxShadow: hoverShadow,
+  },
+});
+
+const StyledButton = styled(Button)({
+  transition: 'box-shadow 0.3s',
+  '&:hover': {
+    boxShadow: hoverShadow,
   },
 });
 
 const Album: React.FC = () => {
   const [selectedAlbum, setSelectedAlbum] = useState<number | null>(null);
   const [searchTerm, setSearchTerm] = useState<string>('');
-  const [albums, setAlbums] = useState<{ title: string; images: string[] }[]>([
-    {
-      title: 'Familia Rodolpho',
-      images: ['http://casamento.thcinesantos.shop/images/familia-rodolpho/sara1.jpg']
-    },
-    {
-      title: 'Familia Santos',
-      images: ['https://static.vecteezy.com/system/resources/previews/011/850/801/non_2x/wedding-couple-love-atl-png.png']
-    },
-    {
-      title: 'Familia Balbino',
-      images: ['https://static.vecteezy.com/system/resources/previews/011/850/801/non_2x/wedding-couple-love-atl-png.png']
-    },
-    {
-      title: 'Familia Santiago',
-      images: ['https://static.vecteezy.com/system/resources/previews/011/850/801/non_2x/wedding-couple-love-atl-png.png']
-    }
-  ]);
+  const [albums, setAlbums] = useState<{ title: string; images: string[] }[]>(albumsData);
 
   const filteredAlbums = albums.filter(album => album.title.toLowerCase().includes(searchTerm.toLowerCase()));
 
@@ -100,6 +113,13 @@ const Album: React.FC = () => {
           placeholder="Buscar álbuns..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <SearchIcon />
+              </InputAdornment>
+            ),
+          }}
         />
         <Box sx={{ width: '100%', maxWidth: '800px', margin: '0 auto', marginBottom: '40px' }}>
           {selectedAlbum === null ? (
@@ -124,31 +144,31 @@ const Album: React.FC = () => {
                 {albums[selectedAlbum].images.map((image, index) => (
                   <StyledImageContainer key={index}>
                     <StyledImage src={image} alt={`Foto ${index + 1}`} />
-                    <Button
+                    <CustomButtonHome
                       variant="contained"
                       onClick={() => handleDownload(image, `Foto${index + 1}.jpg`)}
                       sx={{ marginTop: '10px' }}
                     >
                       Download
-                    </Button>
+                    </CustomButtonHome>
                   </StyledImageContainer>
                 ))}
               </Slider>
-              <Button variant="contained" onClick={() => setSelectedAlbum(null)} sx={{ marginTop: '20px' }}>
+              <CustomButtonHome variant="contained" onClick={() => setSelectedAlbum(null)} sx={{ marginTop: '20px' }}>
                 Voltar para álbuns
-              </Button>
+              </CustomButtonHome>
               <Grid container spacing={2} sx={{ marginTop: '20px' }}>
                 {albums[selectedAlbum].images.map((image, index) => (
                   <Grid item xs={12} sm={6} md={4} key={index}>
                     <StyledImageContainer>
                       <StyledImage src={image} alt={`Foto ${index + 1}`} />
-                      <Button
+                      <CustomButtonHome
                         variant="contained"
                         onClick={() => handleDownload(image, `Foto${index + 1}.jpg`)}
                         sx={{ marginTop: '10px' }}
                       >
                         Download
-                      </Button>
+                      </CustomButtonHome>
                     </StyledImageContainer>
                   </Grid>
                 ))}

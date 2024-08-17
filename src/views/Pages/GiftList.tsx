@@ -1,11 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import { Container, List, ListItem, Box, TextField, Button } from '@mui/material';
-import { styled } from '@mui/system';
+import React, { useState } from 'react';
+import { List, ListItem, useMediaQuery } from '@mui/material';
+import { styled, useTheme } from '@mui/system';
 import BackgroundContainer from '../../shared/components/BackgroundContainer';
-import axios from 'axios';
-import ReconnectingWebSocket from 'reconnecting-websocket';
-import { StyledText } from '../../styles/StyledTexts/StyledText'; // Importe o StyledText
-import {CustomContainerGiftList} from '../../styles/StyledContainer/CustomContainer';
+import { StyledText } from '../../styles/StyledTexts/StyledText';
+import { CustomContainerGiftList } from '../../styles/StyledContainer/CustomContainer';
+import presentesData from '../../data/presentes.json';
+import Slider from 'react-slick';
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 const StyledList = styled(List)({
   display: 'flex',
@@ -23,79 +25,45 @@ const StyledListItem = styled(ListItem)({
   },
   flexDirection: 'column',
   alignItems: 'center',
-  width: '250px',
-  margin: '10px',
+  width: '100%',  // Ajusta a largura para 100%
+  maxWidth: '280px',  // Máximo de largura para manter a responsividade
+  height: '240px',
+  margin: '10px auto',  // Centraliza horizontalmente
   border: '1px solid #d4af37',
   borderRadius: '10px',
-  padding: '10px',
   backgroundColor: 'rgba(255, 255, 255, 0.8)',
   transition: 'transform 0.2s, box-shadow 0.2s',
 });
 
 const ItemImage = styled('img')({
-  width: '200px',
-  height: '180px',
-  objectFit: 'cover',
+  width: '100%',
+  height: '100%',
+  padding: '10px',
+  objectFit: 'contain',
+  maxWidth: '240px',
+  maxHeight: '200px',
 });
 
 const GiftList: React.FC = () => {
-  const [inputAmount, setInputAmount] = useState<number>(0);
-  const [confirmedAmount, setConfirmedAmount] = useState<number>(0);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [pixQRCode, setPixQRCode] = useState<string | null>(null);
-  const targetAmount = 100000;
-
-  useEffect(() => {
-    const ws = new ReconnectingWebSocket('ws://backend:5000');
-
-    ws.onmessage = (event) => {
-      const data = JSON.parse(event.data);
-      setConfirmedAmount((prevAmount) => prevAmount + data.amount);
-    };
-
-    return () => {
-      ws.close();
-    };
-  }, []);
+  const [giftItems] = useState(presentesData);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm')); // Verifica se é um dispositivo móvel
 
   const handleItemClick = (url: string) => {
     window.location.href = url;
   };
 
-  const handleInputAmountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.value;
-    if (!isNaN(Number(value)) && Number(value) >= 0 && Number(value) <= targetAmount) {
-      setInputAmount(Number(value));
-    } else if (value === '') {
-      setInputAmount(0);
-    }
+  const sliderSettings = {
+    dots: false,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    autoplay: true,
+    autoplaySpeed: 3000,
+    centerMode: false,
+    adaptiveHeight: true,
   };
-
-  const handlePixPayment = async () => {
-    setLoading(true);
-    const amount = inputAmount;
-    try {
-      const response = await axios.post(
-        'http://backend:5000/api/create_pix_payment',
-        { amount }
-      );
-      const qrCode = response.data.point_of_interaction.transaction_data.qr_code_base64;
-      setPixQRCode(qrCode);
-      setInputAmount(0);
-    } catch (error) {
-      console.error('Erro ao criar pagamento PIX', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const progress = confirmedAmount ? (confirmedAmount / targetAmount) * 100 : 0;
-
-  const giftItems = [
-    { name: 'Lava e Seca', imageUrl: 'https://imgs.extra.com.br/55048501/1g.jpg', url: 'https://www.extra.com.br/lava-e-seca-samsung-wd11m-3-em-1-inox-look-com-lavagem-a-seco-wd11m4473px-11-kg-55048501/p/55048501?utm_medium=cpc&utm_source=GP_PLA&IdSku=55048501&idLojista=228168&tipoLojista=3P&gclsrc=aw.ds&&utm_campaign=3p_gg_pmax_eldo&gad_source=1&gclid=CjwKCAjwhvi0BhA4EiwAX25uj5IArz1FhcobpOnBVvUnh9Qfyf4XXOhd-jTgnesCabTWwJcC7qr87RoC2d0QAvD_BwE' },
-    { name: 'Geladeira', imageUrl: 'https://brastemp.vtexassets.com/arquivos/ids/242082-500-500?v=638461236485470000&width=500&height=500&aspect=true.png', url: 'https://www.brastemp.com.br/geladeira-brastemp-frost-free-inverse-a-479-litros-cor-inox-com-super-capacidade-e-smart-flow-bre58fk/p?idsku=326125829&utmi_cp=cpc&utmi_campaign=cpc&gad_source=1&gclid=CjwKCAjwhvi0BhA4EiwAX25uj465Wqa7vt13uBnZkbzLzy06qiNAyc31_kl_VPdwvPikhd-sbXrqSxoCiOoQAvD_BwE' },
-    // Adicione mais itens conforme necessário
-  ];
 
   return (
     <BackgroundContainer>
@@ -104,28 +72,42 @@ const GiftList: React.FC = () => {
         <StyledText variant="subtitle1">
           Ajude-nos a mobiliar nossa nova casa! Contribua em nossa nova etapa :D
         </StyledText>
-        <StyledList>
-          {giftItems.map((item, index) => (
-            <StyledListItem key={index} onClick={() => handleItemClick(item.url)}>
-              <StyledText>{item.name}</StyledText>
-              <ItemImage src={item.imageUrl} alt={item.name} />
-            </StyledListItem>
-          ))}
-        </StyledList>
-        <StyledText variant="body1" gutterBottom>
-          Caso você seja nosso chefe, um aumento salarial seria o suficiente! kk
+
+        {giftItems.map((comodo, comodoIndex) => (
+          <div key={comodoIndex}>
+            <StyledText variant="h5" gutterBottom>{comodo.comodo}</StyledText>
+            {isMobile && comodo.moveis.length > 1 ? (
+              <Slider {...sliderSettings}>
+                {comodo.moveis.map((item, itemIndex) => (
+                  <StyledListItem key={itemIndex} onClick={() => handleItemClick(item.url)}>
+                    <StyledText>{item.name}</StyledText>
+                    <ItemImage src={item.imageUrl} alt={item.name} />
+                  </StyledListItem>
+                ))}
+              </Slider>
+            ) : (
+              <StyledList>
+                {comodo.moveis.map((item, itemIndex) => (
+                  <StyledListItem key={itemIndex} onClick={() => handleItemClick(item.url)}>
+                    <StyledText>{item.name}</StyledText>
+                    <ItemImage src={item.imageUrl} alt={item.name} />
+                  </StyledListItem>
+                ))}
+              </StyledList>
+            )}
+          </div>
+        ))}
+
+        <StyledText variant="body1" gutterBottom  paddingTop={"1rem"} gap={"1rem"}>
+          Obrigado por confirmar sua presença em nosso casamento! :D, todos os itens acima são apenas sugestões de presentes, 
+          fique à vontade para escolher o que achar melhor mesmo que o item não esteja acima, lembranças são bem-vindas, 
+          o importante é sua presença em nosso dia especial!
         </StyledText>
         <StyledText variant="body1" gutterBottom>
-          Ou envie um presente em dinheiro pela chave PIX: 123.456.789-00
+          Endereço para a entrega: Rua Oswaldo Mezadri, 619 - Jardim Mirante dos Ovnis - Bloco 2B apartamento 202B Votorantim.
         </StyledText>
-        <StyledText variant="body2" gutterBottom>
-          Endereço para a entrega dos itens: Rua Oswaldo Mezadri, 619 - Jardim Mirante dos Ovnis - Bloco 2B apartamento 202B Votorantim
-        </StyledText>
-        <StyledText variant="body2" gutterBottom>
-          Quem irá receber: Tharsys Da Silva De Oliveira Santos
-        </StyledText>
-        <StyledText variant="body2" gutterBottom>
-          Obrigado! :D
+        <StyledText variant="body1" gutterBottom>
+          Quem irá receber: Tharsys Da Silva De Oliveira Santos || telefone: (ddd)celular
         </StyledText>
       </CustomContainerGiftList>
     </BackgroundContainer>
