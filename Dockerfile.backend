@@ -13,6 +13,9 @@ RUN npm install --prefer-offline --no-audit --progress=false --no-fund
 # Copy all backend files
 COPY backend .
 
+# Copy the data folder to ensure the JSON files are available during the build
+COPY src/data /usr/src/app/data
+
 # Expose the port the app runs on
 EXPOSE 5000
 
