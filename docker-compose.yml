@@ -1,3 +1,4 @@
+version: '3'
 services:
   backend:
     build:
@@ -8,8 +9,7 @@ services:
     ports:
       - "5000:5000"
     volumes:
-      - ./backend:/usr/src/app
-      - ./src/data:/usr/src/app/data  # Monta a pasta data no contêiner
+      - ./backend:/usr/src/app  # Backend só precisa desse volume
     networks:
       - app-network
 
@@ -32,7 +32,7 @@ services:
       - ./public:/usr/src/app/public
       - ./tsconfig.json:/usr/src/app/tsconfig.json
       - ./tailwind.config.js:/usr/src/app/tailwind.config.js
-      - ./src/data:/usr/src/app/src/data  # Monta a pasta data no frontend também
+      - ./src/data:/usr/src/app/src/data  # Monta a pasta data no frontend
     networks:
       - app-network
     # O frontend não precisa expor portas diretamente, pois o NGINX irá servir o frontend
