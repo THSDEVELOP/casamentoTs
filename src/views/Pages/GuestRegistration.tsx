@@ -5,7 +5,7 @@ import { styled } from '@mui/system';
 import { useNavigate } from 'react-router-dom';
 import emailjs from '@emailjs/browser';
 import BackgroundContainer from '../../shared/components/BackgroundContainer';
-import { StyledText, CustomTextField } from '../../styles/StyledTexts/StyledText'; // Importe o StyledText
+import { StyledText, CustomTextField } from '../../styles/StyledTexts/StyledText';
 import { FamilyMember } from 'context-Family-Member';
 import { CustomContainerRegister } from '../../styles/StyledContainer/CustomContainer';
 import CustomButtonHome from '../../styles/StyledButton/CustomButtonHome';
@@ -32,11 +32,11 @@ const GuestRegistration: React.FC = () => {
 
     const { setFamilyName, setMembers } = context;
     const [localFamilyName, setLocalFamilyName] = useState('');
-    const [localMembers, setLocalMembers] = useState<FamilyMember[]>([{ name: '', age: 0 }]);
+    const [localMembers, setLocalMembers] = useState<FamilyMember[]>([{ name: '' }]);
     const [snackbarOpen, setSnackbarOpen] = useState(false);
 
     const addMember = () => {
-        setLocalMembers([...localMembers, { name: '', age: 0 }]);
+        setLocalMembers([...localMembers, { name: ''}]);
     };
 
     const removeMember = (index: number) => {
@@ -61,7 +61,7 @@ const GuestRegistration: React.FC = () => {
 
         const templateParams = {
             from_name: localFamilyName,
-            to_name: localMembers.map(member => `${member.name}, Idade: ${member.age}`).join('\n')
+            to_name: localMembers.map(member => `${member.name}`).join('\n')
         };
 
         try {
@@ -88,7 +88,7 @@ const GuestRegistration: React.FC = () => {
                 </StyledText>
                 <CustomForm onSubmit={handleSubmit}>
                     <CustomTextField
-                        label="Nome da Família"
+                        label="Sobrenome da Família"
                         variant="outlined"
                         fullWidth
                         value={localFamilyName}

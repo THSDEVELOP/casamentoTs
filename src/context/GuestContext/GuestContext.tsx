@@ -2,7 +2,6 @@ import React, { createContext, useState, ReactNode } from 'react';
 
 interface FamilyMember {
     name: string;
-    age: number;
 }
 
 interface GuestContextType {

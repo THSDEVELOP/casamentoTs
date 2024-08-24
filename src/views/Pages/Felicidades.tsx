@@ -7,7 +7,7 @@ import { db } from './firebase';
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/firestore';
 import { StyledText, CustomTextField } from '../../styles/StyledTexts/StyledText';
-import {CustomContainerFelicidades} from '../../styles/StyledContainer/CustomContainer';
+import { CustomContainerFelicidades } from '../../styles/StyledContainer/CustomContainer';
 import CustomButtonHome from '../../styles/StyledButton/CustomButtonHome';
 
 interface Wish {
@@ -16,6 +16,11 @@ interface Wish {
   wish: string;
 }
 
+const CommentContainer = styled('div')(({ theme }) => ({
+  textAlign: 'center',
+  marginBottom: '10px',
+}));
+
 const StyledSnackbar = styled(Snackbar)({
   '& .MuiSnackbarContent-root': {
     backgroundColor: '#d4af37',
@@ -23,12 +28,35 @@ const StyledSnackbar = styled(Snackbar)({
   },
 });
 
+const StyledListItem = styled(ListItem)(({ theme }) => ({
+  fontFamily: 'cursive',
+  color: '#b8860b',
+  fontStyle: 'italic',
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  marginBottom: '20px',
+}));
+
+const WishContent = styled('div')(({ theme }) => ({
+  textAlign: 'justify',
+  padding: '0 16px',
+  whiteSpace: 'pre-wrap',
+  wordBreak: 'break-word',
+  overflowWrap: 'break-word',
+  color: '#000000',
+}));
+
+
 const Felicidades: React.FC = () => {
   const { familyName, members } = useContext(GuestContext)!;
   const [wishes, setWishes] = useState('');
   const [representativeName, setRepresentativeName] = useState('');
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [wishesList, setWishesList] = useState<Wish[]>([]);
+
+  // Remove "Família" do nome da família, se presente
+  const cleanFamilyName = familyName?.replace(/família/i, '').trim();
 
   useEffect(() => {
     const unsubscribe = db.collection('wishes')
@@ -53,7 +81,7 @@ const Felicidades: React.FC = () => {
     if (representativeName && wishes) {
       try {
         await db.collection('wishes').add({
-          family: familyName || '',
+          family: cleanFamilyName || '',
           representative: representativeName,
           wish: wishes,
           timestamp: firebase.firestore.FieldValue.serverTimestamp(),
@@ -76,16 +104,16 @@ const Felicidades: React.FC = () => {
       <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh">
         <CustomContainerFelicidades>
           <StyledText variant="h4" gutterBottom>
-            Família {familyName}
+            Família {cleanFamilyName}
           </StyledText>
           <StyledText variant="body1" gutterBottom>
             Estamos felizes em convidar-los:
           </StyledText>
           <List>
             {members.map((member, index) => (
-              <ListItem key={index}>
-                {member.name} (Idade: {member.age})
-              </ListItem>
+              <StyledListItem key={index}>
+                {member.name}
+              </StyledListItem>
             ))}
           </List>
           <StyledText variant="body1" gutterBottom>
@@ -102,7 +130,7 @@ const Felicidades: React.FC = () => {
             Deixe suas felicitações aos noivos:
           </StyledText>
           <CustomTextField
-            label="Felicitações"
+            label="Felicidades!"
             variant="outlined"
             fullWidth
             multiline
@@ -111,7 +139,7 @@ const Felicidades: React.FC = () => {
             onChange={handleWishesChange}
           />
           <CustomButtonHome onClick={handleSubmit}>
-            Enviar Felicitações
+            Enviar Comentário
           </CustomButtonHome>
           <StyledSnackbar
             open={snackbarOpen}
@@ -121,14 +149,20 @@ const Felicidades: React.FC = () => {
           />
           <Box mt={4}>
             <StyledText variant="h5" gutterBottom>
-              Felicitações das Famílias Convidadas
+              Comentários das Famílias Convidadas
             </StyledText>
             <List>
-              {wishesList.map((entry, index) => (
-                <ListItem key={index}>
-                  <strong>Família {entry.family} - {entry.representative}:</strong> {entry.wish}
-                </ListItem>
-              ))}
+              {wishesList.map((entry, index) => {
+                const cleanEntryFamilyName = entry.family.replace(/família/i, '').trim();
+                return (
+                  <StyledListItem key={index}>
+                    <CommentContainer>
+                      <strong>{cleanEntryFamilyName} - {entry.representative}:</strong>
+                      <WishContent>{entry.wish}</WishContent>
+                    </CommentContainer>
+                  </StyledListItem>
+                );
+              })}
             </List>
           </Box>
         </CustomContainerFelicidades>

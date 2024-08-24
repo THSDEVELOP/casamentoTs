@@ -25,10 +25,10 @@ const StyledListItem = styled(ListItem)({
   },
   flexDirection: 'column',
   alignItems: 'center',
-  width: '100%',  // Ajusta a largura para 100%
-  maxWidth: '280px',  // Máximo de largura para manter a responsividade
+  width: '100%',
+  maxWidth: '280px',
   height: '240px',
-  margin: '10px auto',  // Centraliza horizontalmente
+  margin: '10px auto',
   border: '1px solid #d4af37',
   borderRadius: '10px',
   backgroundColor: 'rgba(255, 255, 255, 0.8)',
@@ -47,7 +47,7 @@ const ItemImage = styled('img')({
 const GiftList: React.FC = () => {
   const [giftItems] = useState(presentesData);
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm')); // Verifica se é um dispositivo móvel
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   const handleItemClick = (url: string) => {
     window.location.href = url;

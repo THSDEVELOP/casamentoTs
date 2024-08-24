@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, Grid, Button, TextField, InputAdornment } from '@mui/material';
+import { Box, Grid, Button, TextField, InputAdornment, SvgIcon } from '@mui/material';
 import { styled } from '@mui/system';
 import SearchIcon from '@mui/icons-material/Search';
 import BackgroundContainer from '../../shared/components/BackgroundContainer';
@@ -12,7 +12,13 @@ import { AlbumCard } from '../../styles/StyledImagesAlbum/StyledAlbum';
 import albumsData from '../../data/albums.json';
 import CustomButtonHome from '../../styles/StyledButton/CustomButtonHome';
 
-const hoverShadow = '0 4px 8px rgba(0, 0, 0, 0.3)'; // Sombra suave no hover
+const CrownIcon = (props: any) => (
+  <SvgIcon {...props}>
+    <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" />
+  </SvgIcon>
+);
+
+const hoverShadow = '0 4px 8px rgba(0, 0, 0, 0.3)';
 
 const SearchField = styled(TextField)(({ theme }) => ({
   marginBottom: '20px',
@@ -62,6 +68,15 @@ const StyledImage = styled('img')({
     opacity: 0.9,
     boxShadow: hoverShadow,
   },
+});
+
+const CrownContainer = styled(Box)({
+  position: 'absolute',
+  top: '10px',
+  right: '10px',
+  color: '#b8860b',
+  zIndex: 1,
+  fontSize: '2rem',
 });
 
 const StyledButton = styled(Button)({
@@ -125,11 +140,21 @@ const Album: React.FC = () => {
           {selectedAlbum === null ? (
             <Grid container spacing={2}>
               {filteredAlbums.map((album, index) => (
-                <Grid item xs={12} sm={6} md={4} key={index}>
+                <Grid 
+                  item 
+                  xs={12} 
+                  sm={6} 
+                  md={4} 
+                  key={index}>
                   <AlbumCard
                     variant="contained"
                     onClick={() => setSelectedAlbum(index)}
                   >
+                    {index < 5 && (
+                      <CrownContainer>
+                        <CrownIcon fontSize="large" />
+                      </CrownContainer>
+                    )}
                     <StyledImageContainer>
                       <StyledImage src={album.images[0]} alt={`Capa do álbum ${album.title}`} />
                     </StyledImageContainer>
