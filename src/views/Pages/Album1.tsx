@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, Grid, Button, TextField, InputAdornment, SvgIcon } from '@mui/material';
+import { Box, Grid, TextField, InputAdornment, SvgIcon } from '@mui/material';
 import { styled } from '@mui/system';
 import SearchIcon from '@mui/icons-material/Search';
 import BackgroundContainer from '../../shared/components/BackgroundContainer';
@@ -79,13 +79,6 @@ const CrownContainer = styled(Box)({
   fontSize: '2rem',
 });
 
-const StyledButton = styled(Button)({
-  transition: 'box-shadow 0.3s',
-  '&:hover': {
-    boxShadow: hoverShadow,
-  },
-});
-
 const Album: React.FC = () => {
   const [selectedAlbum, setSelectedAlbum] = useState<number | null>(null);
   const [searchTerm, setSearchTerm] = useState<string>('');
@@ -140,27 +133,43 @@ const Album: React.FC = () => {
           {selectedAlbum === null ? (
             <Grid container spacing={2}>
               {filteredAlbums.map((album, index) => (
-                <Grid 
-                  item 
-                  xs={12} 
-                  sm={6} 
-                  md={4} 
-                  key={index}>
-                  <AlbumCard
-                    variant="contained"
-                    onClick={() => setSelectedAlbum(index)}
-                  >
-                    {index < 5 && (
-                      <CrownContainer>
-                        <CrownIcon fontSize="large" />
-                      </CrownContainer>
-                    )}
-                    <StyledImageContainer>
-                      <StyledImage src={album.images[0]} alt={`Capa do álbum ${album.title}`} />
-                    </StyledImageContainer>
-                    <StyledText variant="h6">{album.title}</StyledText>
-                  </AlbumCard>
-                </Grid>
+                album.title.toLowerCase() === 'chácara' ? (
+                  <Grid item xs={12} key={index}>
+                    <Box sx={{ position: 'relative', overflow: 'hidden', borderRadius: '10px' }}>
+                      <Slider {...settings}>
+                        {album.images.map((image, index) => (
+                          <StyledImageContainer key={index}>
+                            <StyledImage src={image} alt={`Foto ${index + 1}`} />
+                            <CustomButtonHome
+                              variant="contained"
+                              onClick={() => handleDownload(image, `Foto${index + 1}.jpg`)}
+                              sx={{ marginTop: '10px' }}
+                            >
+                              Download
+                            </CustomButtonHome>
+                          </StyledImageContainer>
+                        ))}
+                      </Slider>
+                    </Box>
+                  </Grid>
+                ) : (
+                  <Grid item xs={12} sm={6} md={4} key={index}>
+                    <AlbumCard
+                      variant="contained"
+                      onClick={() => setSelectedAlbum(index)}
+                    >
+                      {index < 5 && (
+                        <CrownContainer>
+                          <CrownIcon fontSize="large" />
+                        </CrownContainer>
+                      )}
+                      <StyledImageContainer>
+                        <StyledImage src={album.images[0]} alt={`Capa do álbum ${album.title}`} />
+                      </StyledImageContainer>
+                      <StyledText variant="h6">{album.title}</StyledText>
+                    </AlbumCard>
+                  </Grid>
+                )
               ))}
             </Grid>
           ) : (

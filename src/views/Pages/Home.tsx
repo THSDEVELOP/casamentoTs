@@ -72,6 +72,9 @@ const ImageCarousel: React.FC<{ images: string[], navigate: (path: string) => vo
               <Typography sx={{ mt: 2 }}>
                 <strong>Álbum:</strong> Na seção Álbum, após o casamento todas as fotos serão disponibilizadas, cada família terá seu álbum individualizado para recordação do nosso casamento onde será possível realizar o download das imagens.
               </Typography>
+              <Typography sx={{ mt: 2 }}>
+                <strong>Local/Endereço:</strong> O endereço da chacara será enviado juntamente ao convite.
+              </Typography>
             </Box>
           </Modal>
         <CustomButtonHome variant="contained" onClick={handleOpen} sx={{ marginBottom: '1rem' }}>
