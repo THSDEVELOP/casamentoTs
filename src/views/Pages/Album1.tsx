@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
-import { Box, Grid, TextField, InputAdornment, SvgIcon } from '@mui/material';
+import { Box, Grid, TextField, InputAdornment, SvgIcon, Modal, IconButton } from '@mui/material';
 import { styled } from '@mui/system';
 import SearchIcon from '@mui/icons-material/Search';
+import CloseIcon from '@mui/icons-material/Close';
+import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import BackgroundContainer from '../../shared/components/BackgroundContainer';
 import Slider from 'react-slick';
 import "slick-carousel/slick/slick.css";
@@ -58,12 +61,15 @@ const StyledImageContainer = styled(Box)(({ theme }) => ({
   },
 }));
 
-const StyledImage = styled('img')({
-  width: '100%',
-  height: 'auto',
+const StyledImage = styled('img')<{
+  isChacara?: boolean;
+}>({
+  width: '1200px',
+  height: '500px',
   objectFit: 'cover',
   borderRadius: '10px',
   transition: 'opacity 0.3s, box-shadow 0.3s',
+  cursor: 'pointer',
   '&:hover': {
     opacity: 0.9,
     boxShadow: hoverShadow,
@@ -79,15 +85,46 @@ const CrownContainer = styled(Box)({
   fontSize: '2rem',
 });
 
+const ModalImage = styled('img')({
+  width: '100%',
+  maxWidth: '90vw',
+  maxHeight: '80vh',
+  objectFit: 'contain',
+  borderRadius: '10px',
+});
+
+const ModalContent = styled(Box)({
+  position: 'relative',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  width: '100%',
+  height: '100%',
+  outline: 'none',
+});
+
+const NavigationButton = styled(IconButton)({
+  position: 'absolute',
+  top: '50%',
+  transform: 'translateY(-50%)',
+  color: '#fff',
+  zIndex: 2,
+  '&:hover': {
+    backgroundColor: 'rgba(0, 0, 0, 0.2)',
+  },
+});
+
 const Album: React.FC = () => {
   const [selectedAlbum, setSelectedAlbum] = useState<number | null>(null);
+  const [currentImageIndex, setCurrentImageIndex] = useState<number>(0);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [albums, setAlbums] = useState<{ title: string; images: string[] }[]>(albumsData);
 
   const filteredAlbums = albums.filter(album => album.title.toLowerCase().includes(searchTerm.toLowerCase()));
 
   const settings = {
-    dots: true,
+    dots: false,
     infinite: true,
     speed: 500,
     slidesToShow: 1,
@@ -113,6 +150,27 @@ const Album: React.FC = () => {
       .catch(err => console.error('Erro ao fazer download da imagem:', err));
   };
 
+  const openModal = (index: number) => {
+    setCurrentImageIndex(index);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleNextImage = () => {
+    if (selectedAlbum !== null) {
+      setCurrentImageIndex((prevIndex) => (prevIndex + 1) % albums[selectedAlbum].images.length);
+    }
+  };
+
+  const handlePrevImage = () => {
+    if (selectedAlbum !== null) {
+      setCurrentImageIndex((prevIndex) => (prevIndex - 1 + albums[selectedAlbum].images.length) % albums[selectedAlbum].images.length);
+    }
+  };
+
   return (
     <BackgroundContainer>
       <CustomContainerAlbum>
@@ -133,43 +191,26 @@ const Album: React.FC = () => {
           {selectedAlbum === null ? (
             <Grid container spacing={2}>
               {filteredAlbums.map((album, index) => (
-                album.title.toLowerCase() === 'chácara' ? (
-                  <Grid item xs={12} key={index}>
-                    <Box sx={{ position: 'relative', overflow: 'hidden', borderRadius: '10px' }}>
-                      <Slider {...settings}>
-                        {album.images.map((image, index) => (
-                          <StyledImageContainer key={index}>
-                            <StyledImage src={image} alt={`Foto ${index + 1}`} />
-                            <CustomButtonHome
-                              variant="contained"
-                              onClick={() => handleDownload(image, `Foto${index + 1}.jpg`)}
-                              sx={{ marginTop: '10px' }}
-                            >
-                              Download
-                            </CustomButtonHome>
-                          </StyledImageContainer>
-                        ))}
-                      </Slider>
-                    </Box>
-                  </Grid>
-                ) : (
-                  <Grid item xs={12} sm={6} md={4} key={index}>
-                    <AlbumCard
-                      variant="contained"
-                      onClick={() => setSelectedAlbum(index)}
-                    >
-                      {index < 5 && (
-                        <CrownContainer>
-                          <CrownIcon fontSize="large" />
-                        </CrownContainer>
-                      )}
-                      <StyledImageContainer>
-                        <StyledImage src={album.images[0]} alt={`Capa do álbum ${album.title}`} />
-                      </StyledImageContainer>
-                      <StyledText variant="h6">{album.title}</StyledText>
-                    </AlbumCard>
-                  </Grid>
-                )
+                <Grid item xs={12} sm={6} md={4} key={index}>
+                  <AlbumCard
+                    variant="contained"
+                    onClick={() => setSelectedAlbum(index)}
+                  >
+                    {index < 5 && (
+                      <CrownContainer>
+                        <CrownIcon fontSize="large" />
+                      </CrownContainer>
+                    )}
+                    <StyledImageContainer>
+                      <StyledImage
+                        src={album.images[0]}
+                        alt={`Capa do álbum ${album.title}`}
+                        isChacara={album.title.toLowerCase() === 'chácara'}
+                      />
+                    </StyledImageContainer>
+                    <StyledText variant="h6">{album.title}</StyledText>
+                  </AlbumCard>
+                </Grid>
               ))}
             </Grid>
           ) : (
@@ -177,14 +218,21 @@ const Album: React.FC = () => {
               <Slider {...settings}>
                 {albums[selectedAlbum].images.map((image, index) => (
                   <StyledImageContainer key={index}>
-                    <StyledImage src={image} alt={`Foto ${index + 1}`} />
-                    <CustomButtonHome
-                      variant="contained"
-                      onClick={() => handleDownload(image, `Foto${index + 1}.jpg`)}
-                      sx={{ marginTop: '10px' }}
-                    >
-                      Download
-                    </CustomButtonHome>
+                    <StyledImage
+                      src={image}
+                      alt={`Foto ${index + 1}`}
+                      isChacara={albums[selectedAlbum].title.toLowerCase() === 'chácara'}
+                      onClick={() => openModal(index)}
+                    />
+                    {albums[selectedAlbum].title.toLowerCase() !== 'chácara' && (
+                      <CustomButtonHome
+                        variant="contained"
+                        onClick={() => handleDownload(image, `Foto${index + 1}.jpg`)}
+                        sx={{ marginTop: '10px' }}
+                      >
+                        Download
+                      </CustomButtonHome>
+                    )}
                   </StyledImageContainer>
                 ))}
               </Slider>
@@ -195,14 +243,21 @@ const Album: React.FC = () => {
                 {albums[selectedAlbum].images.map((image, index) => (
                   <Grid item xs={12} sm={6} md={4} key={index}>
                     <StyledImageContainer>
-                      <StyledImage src={image} alt={`Foto ${index + 1}`} />
-                      <CustomButtonHome
-                        variant="contained"
-                        onClick={() => handleDownload(image, `Foto${index + 1}.jpg`)}
-                        sx={{ marginTop: '10px' }}
-                      >
-                        Download
-                      </CustomButtonHome>
+                      <StyledImage
+                        src={image}
+                        alt={`Foto ${index + 1}`}
+                        isChacara={albums[selectedAlbum].title.toLowerCase() === 'chácara'}
+                        onClick={() => openModal(index)}
+                      />
+                      {albums[selectedAlbum].title.toLowerCase() !== 'chácara' && (
+                        <CustomButtonHome
+                          variant="contained"
+                          onClick={() => handleDownload(image, `Foto${index + 1}.jpg`)}
+                          sx={{ marginTop: '10px' }}
+                        >
+                          Download
+                        </CustomButtonHome>
+                      )}
                     </StyledImageContainer>
                   </Grid>
                 ))}
@@ -211,6 +266,27 @@ const Album: React.FC = () => {
           )}
         </Box>
       </CustomContainerAlbum>
+
+      {/* Modal para visualizar a imagem */}
+      <Modal
+        open={isModalOpen}
+        onClose={closeModal}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <ModalContent>
+          <NavigationButton onClick={handlePrevImage} sx={{ left: '10px' }}>
+            <ArrowBackIosNewIcon />
+          </NavigationButton>
+          <ModalImage src={selectedAlbum !== null ? albums[selectedAlbum].images[currentImageIndex] : ''} alt="Imagem ampliada" />
+          <NavigationButton onClick={handleNextImage} sx={{ right: '10px' }}>
+            <ArrowForwardIosIcon />
+          </NavigationButton>
+          <IconButton onClick={closeModal} sx={{ position: 'absolute', top: '10px', right: '10px', color: '#fff' }}>
+            <CloseIcon />
+          </IconButton>
+        </ModalContent>
+      </Modal>
     </BackgroundContainer>
   );
 };

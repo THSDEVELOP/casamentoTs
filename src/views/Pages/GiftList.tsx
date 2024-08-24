@@ -107,7 +107,7 @@ const GiftList: React.FC = () => {
           Endereço para a entrega: Rua Oswaldo Mezadri, 619 - Jardim Mirante dos Ovnis - Bloco 2B apartamento 202B Votorantim.
         </StyledText>
         <StyledText variant="body1" gutterBottom>
-          Quem irá receber: Tharsys Da Silva De Oliveira Santos || telefone: (ddd)celular
+          Quem irá receber: Tharsys Da Silva De Oliveira Santos
         </StyledText>
       </CustomContainerGiftList>
     </BackgroundContainer>
