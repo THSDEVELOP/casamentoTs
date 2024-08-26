@@ -36,6 +36,24 @@ services:
     networks:
       - app-network
 
+  nginx:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+      target: nginx
+    volumes:
+      - /root/casamentoTs/nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+      - /root/images:/usr/share/nginx/html/images
+      - /etc/letsencrypt/live/saraetharsys.online:/etc/letsencrypt/live/saraetharsys.online:ro
+      - /etc/letsencrypt/archive/saraetharsys.online:/etc/letsencrypt/archive/saraetharsys.online:ro
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - frontend
+    networks:
+      - app-network
+
 networks:
   app-network:
     driver: bridge
