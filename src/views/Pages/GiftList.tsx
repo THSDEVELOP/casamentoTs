@@ -13,6 +13,8 @@ const StyledList = styled(List)({
   display: 'flex',
   flexWrap: 'wrap',
   justifyContent: 'center',
+  gap: '20px',
+  padding: '0 10px',
 });
 
 const StyledListItem = styled(ListItem)({
