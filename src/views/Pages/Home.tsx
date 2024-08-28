@@ -81,7 +81,7 @@ const ImageCarousel: React.FC<{ images: string[], navigate: (path: string) => vo
           Instruções
         </CustomButtonHome>
         <CustomButtonHome variant="contained" onClick={() => navigate('/guestregistration')} sx={{ marginBottom: '1rem' }}>
-          Cadastro
+          Registro
         </CustomButtonHome>
         <CustomButtonHome variant="contained" onClick={() => navigate('/felicidades')} sx={{ marginBottom: '1rem' }}>
           Comentários
