@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Box, Modal, Typography } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom'; // Importação corrigida
 import Slider from 'react-slick';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -80,13 +80,17 @@ const ImageCarousel: React.FC<{ images: string[], navigate: (path: string) => vo
         <CustomButtonHome variant="contained" onClick={handleOpen} sx={{ marginBottom: '1rem' }}>
           Instruções
         </CustomButtonHome>
-        <CustomButtonHome variant="contained" onClick={() => navigate('/guestregistration')} sx={{ marginBottom: '1rem' }}>
+        <CustomButtonHome variant="contained" onClick={() => navigate('/GuestRegistration')} sx={{ marginBottom: '1rem' }}>
           Registro
         </CustomButtonHome>
         <CustomButtonHome variant="contained" onClick={() => navigate('/felicidades')} sx={{ marginBottom: '1rem' }}>
           Comentários
         </CustomButtonHome>
-        <CustomButtonHome variant="contained" onClick={() => navigate('/giftlist')} sx={{ marginBottom: '1rem' }}>
+        <CustomButtonHome
+          variant="contained"
+          onClick={() => window.location.href = 'https://www.finalfeliz.de/tharsys-sara'}
+          sx={{ marginBottom: '1rem' }}
+        >
           Lista de Presentes
         </CustomButtonHome>
         <CustomButtonHome variant="contained" onClick={() => navigate('/album')}>
@@ -104,11 +108,6 @@ const Home: React.FC = () => {
     'https://static.vecteezy.com/system/resources/previews/011/850/801/non_2x/wedding-couple-love-atl-png.png',
     'https://static.vecteezy.com/system/resources/previews/011/850/801/non_2x/wedding-couple-love-atl-png.png',
   ];
-
-  const [open, setOpen] = useState(false);
-
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
 
   return (
     <BackgroundContainer>
@@ -129,6 +128,9 @@ const Home: React.FC = () => {
           </StyledText>
           <StyledText variant="h3" gutterBottom align="center" sx={{ marginBottom: '3rem' }}>
             Sara & Tharsys
+          </StyledText>
+          <StyledText variant="h3" gutterBottom align="center" sx={{ marginBottom: '3rem' }}>
+            16:00 do dia 12/10/2024
           </StyledText>
           <ImageCarousel images={images} navigate={navigate} />
         </Box>
